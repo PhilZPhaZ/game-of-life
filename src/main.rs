@@ -1,8 +1,8 @@
 use minifb::{Key, Window, WindowOptions, KeyRepeat, MouseMode, MouseButton};
 
 const CELL_SIZE: usize = 10;
-const NUMBER_CELLS_WIDTH: usize = 80;
-const NUMBER_CELLS_HEIGHT: usize = 80;
+const NUMBER_CELLS_WIDTH: usize = 100;
+const NUMBER_CELLS_HEIGHT: usize = 100;
 
 const WIDTH: usize = CELL_SIZE * NUMBER_CELLS_WIDTH;
 const HEIGHT: usize = CELL_SIZE * NUMBER_CELLS_HEIGHT;
@@ -23,11 +23,11 @@ fn update_buffer(buffer: &mut Vec<u32>, cell_grid: &Vec<Vec<Cell>>) {
     for y in 0..NUMBER_CELLS_HEIGHT {
         for x in 0..NUMBER_CELLS_WIDTH {
             let cell = &cell_grid[y][x];
-            let color: u32 = if cell.current_state == 0 { 0x000000 } else { 0xFFFFFF };
+            let color: u32 = if cell.current_state == 0 { 0x393E46 } else { 0x00ADB5 };
 
-            let y_start: usize = y * CELL_SIZE;
+            let y_start: usize = y * (CELL_SIZE);
             let y_end: usize = y_start + CELL_SIZE;
-            let x_start: usize = x * CELL_SIZE;
+            let x_start: usize = x * (CELL_SIZE);
             let x_end: usize = x_start + CELL_SIZE;
 
             for py in y_start..y_end {
@@ -42,7 +42,7 @@ fn update_buffer(buffer: &mut Vec<u32>, cell_grid: &Vec<Vec<Cell>>) {
 
 fn main() {
     let mut cell_grid: Vec<Vec<Cell>> = vec![vec![Cell { current_state: 0, next_state: 0 }; NUMBER_CELLS_WIDTH]; NUMBER_CELLS_HEIGHT];
-    let mut buffer: Vec<u32> = vec![0; WIDTH * HEIGHT];
+    let mut buffer: Vec<u32> = vec![0x393E46; WIDTH * HEIGHT];
 
     let mut window = Window::new(
         "Game of Life",
@@ -96,6 +96,12 @@ fn main() {
                 let cy: usize = y as usize / CELL_SIZE;
 
                 cell_grid[cy][cx].current_state = 1;
+            }
+            if window.get_mouse_down(MouseButton::Right) {
+                let cx: usize = x as usize / CELL_SIZE;
+                let cy: usize = y as usize / CELL_SIZE;
+
+                cell_grid[cy][cx].current_state = 0;
             }
         }
 
